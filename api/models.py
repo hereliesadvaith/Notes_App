@@ -7,7 +7,7 @@ from django.db import models
 class Note(models.Model):
     # attributes works as columns and instances work as rows
     body = models.TextField(null=True, blank=True)
-    update = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
