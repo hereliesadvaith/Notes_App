@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from .models import Note
+from .serializers import NoteSerializer
 
 # Create your views here.
 
@@ -40,3 +42,25 @@ def getRoutes(request):
         },
     ]
     return Response(routes)
+
+
+@api_view(["GET"])
+def getNotes(request):
+    notes = Note.objects.all().order_by("-updated")  # Now we need serializers
+    serializer = NoteSerializer(notes, many=True)  # many true for multiple objects
+    return Response(serializer.data)
+
+
+@api_view(["DELETE"])
+def deleteNote(request, pk):
+    note = Note.objects.get(id=pk)
+    note.delete()
+    return Response("note deleted")
+
+
+@api_view(["POST"])
+def createNote(request):
+    data = request.data
+    note = Note.objects.create(title=data["title"], body=data["content"])
+    serialzer = NoteSerializer(note, many=False)
+    return Response(serialzer.data)
